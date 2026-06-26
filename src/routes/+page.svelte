@@ -56,7 +56,7 @@
   <title>Valor and Unity Crew</title>
 </svelte:head>
 
-<!-- <ImageSlider /> -->
+<ImageSlider />
 
 <ul>
   <li

@@ -4,7 +4,7 @@
 
   let screenWidth = $state(
     (() => {
-      if (browser) return window.innerWidth;
+      if (browser) return window.document.body.clientWidth;
       return 0;
     })(),
   );
@@ -17,13 +17,24 @@
   let mouseTranslation = $state(0);
   let currentTimeout: number | undefined;
 
+  // Normalize index immediately — prevents out-of-range runaway on spam clicks
+  function normalizedIndex(i: number) {
+    return ((i % items.length) + items.length) % items.length;
+  }
+
   function incrementItem() {
-    currentItem++;
+    // Don't let it run more than 1 step past the end
+    if (currentItem < items.length) {
+      currentItem++;
+    }
     scheduleLoop();
   }
 
   function decrementItem() {
-    currentItem--;
+    // Don't let it run more than 1 step before the start
+    if (currentItem > -1) {
+      currentItem--;
+    }
     scheduleLoop();
   }
 
@@ -46,9 +57,10 @@
   }
 
   function handleResize() {
-    screenWidth = window.innerWidth;
+    screenWidth = window.document.body.clientWidth;
   }
 
+  // --- Mouse ---
   function handleMousePressDown() {
     interacting = true;
     clearTimeout(currentTimeout);
@@ -56,20 +68,45 @@
 
   function handleMouseRelease(e: MouseEvent) {
     interacting = false;
-
-    if (e.movementX - mouseTranslation < -35) {
-      decrementItem();
-    } else if (e.movementX - mouseTranslation > 35) {
+    if (mouseTranslation < -50) {
       incrementItem();
+    } else if (mouseTranslation > 50) {
+      decrementItem();
     } else {
       scheduleLoop();
     }
-
     mouseTranslation = 0;
   }
 
   function handleMouseMove(e: MouseEvent) {
     if (interacting) mouseTranslation += e.movementX;
+  }
+
+  // --- Touch ---
+  let touchStartX = 0;
+
+  function handleTouchStart(e: TouchEvent) {
+    interacting = true;
+    clearTimeout(currentTimeout);
+    touchStartX = e.touches[0].clientX;
+    mouseTranslation = 0;
+  }
+
+  function handleTouchMove(e: TouchEvent) {
+    if (!interacting) return;
+    mouseTranslation = e.touches[0].clientX - touchStartX;
+  }
+
+  function handleTouchEnd() {
+    interacting = false;
+    if (mouseTranslation < -50) {
+      incrementItem();
+    } else if (mouseTranslation > 50) {
+      decrementItem();
+    } else {
+      scheduleLoop();
+    }
+    mouseTranslation = 0;
   }
 
   onMount(() => {
@@ -86,6 +123,8 @@
   });
 </script>
 
+<!-- <div>{screenWidth}</div> -->
+
 <section>
   <div class="relative h-100 overflow-hidden">
     <!-- Left clone -->
@@ -95,10 +134,12 @@
       class:duration-500={animated && !interacting}
       style="transform: translateX(calc(-{items.length}00% + {-(
         currentItem * screenWidth
-      ) + mouseTranslation}px))"
+      ) + mouseTranslation}px));"
     >
       {#each items as _, index}
-        <div class="bg-red-300 shrink-0 w-screen h-full">{index}</div>
+        <div class="bg-red-300 shrink-0 h-full" style="width: {screenWidth}px">
+          {index}
+        </div>
       {/each}
     </div>
 
@@ -107,6 +148,9 @@
       onmousedown={handleMousePressDown}
       onmouseup={handleMouseRelease}
       ontransitionend={handleTransitionEnd}
+      ontouchstart={handleTouchStart}
+      ontouchmove={handleTouchMove}
+      ontouchend={handleTouchEnd}
       class="absolute inset-0 flex cursor-grab active:cursor-grabbing"
       class:transition-transform={animated && !interacting}
       class:duration-500={animated && !interacting}
@@ -114,7 +158,9 @@
         mouseTranslation}px)"
     >
       {#each items as _, index}
-        <div class="bg-red-300 shrink-0 w-screen h-full">{index}</div>
+        <div class="bg-red-300 shrink-0 h-full" style="width: {screenWidth}px">
+          {index}
+        </div>
       {/each}
     </div>
 
@@ -125,10 +171,12 @@
       class:duration-500={animated && !interacting}
       style="transform: translateX(calc({items.length}00% + {-(
         currentItem * screenWidth
-      ) + mouseTranslation}px))"
+      ) + mouseTranslation}px));"
     >
       {#each items as _, index}
-        <div class="bg-red-300 shrink-0 w-screen h-full">{index}</div>
+        <div class="bg-red-300 shrink-0 h-full" style="width: {screenWidth}px">
+          {index}
+        </div>
       {/each}
     </div>
 

@@ -4,8 +4,13 @@
   --font-quote: "Playfair Display", serif;
 }
 
+html {
+  /* background-color: #d7e2ff; */
+}
+
 body {
   font-family: "Manrope", sans-serif;
+  /* background-color: #d7e2ff; */
 }
 
 .unscroll {

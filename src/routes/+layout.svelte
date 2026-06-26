@@ -32,7 +32,7 @@
 
 <svelte:body bind:this={bodyRef} />
 
-<div inert={$showOverlay}>
+<div inert={$showOverlay} class="bg-white">
   <Header />
 
   {@render children()}
