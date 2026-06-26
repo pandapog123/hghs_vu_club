@@ -11,6 +11,6 @@
 
 ## Functionality
 
-- [ ] Redesign
+- [x] Redesign
 - [ ] Events Calendar
 - [ ] Volunteer Displays

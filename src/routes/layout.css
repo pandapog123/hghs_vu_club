@@ -1,1 +1,14 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+@theme {
+  --font-quote: "Playfair Display", serif;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+}
+
+.unscroll {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
