@@ -2,9 +2,9 @@
   import { showOverlay } from "$lib/stores/overlay";
   import { fade, fly } from "svelte/transition";
   import Header from "./Header.svelte";
-  import "./layout.css";
-  import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
   import Footer from "./Footer.svelte";
+  import "./layout.css";
+  import { cubicIn, cubicOut } from "svelte/easing";
 
   let { children } = $props();
 
@@ -14,7 +14,7 @@
     if (!bodyRef) return;
 
     if ($showOverlay) {
-      bodyRef.classList += "unscroll";
+      bodyRef.classList.add("unscroll");
     } else {
       bodyRef.classList.remove("unscroll");
     }
@@ -32,10 +32,12 @@
 
 <svelte:body bind:this={bodyRef} />
 
-<div inert={$showOverlay} class="bg-white">
+<div inert={$showOverlay} class="flex min-h-screen flex-col bg-white">
   <Header />
 
-  {@render children()}
+  <main class="flex-1">
+    {@render children()}
+  </main>
 
   <Footer />
 </div>
@@ -43,12 +45,12 @@
 {#if $showOverlay}
   <div
     inert={!$showOverlay}
-    class="fixed top-0 left-0 w-screen h-screen bg-black/60 overflow-hidden z-50"
+    class="fixed left-0 top-0 z-50 h-screen w-screen overflow-hidden bg-black/60"
     in:fade={{ duration: 250 }}
     out:fade={{ delay: 50, duration: 250 }}
   >
     <nav
-      class="fixed top-16 w-full h-[calc(100vh-4rem)] rounded-t-4xl p-8 bg-white flex justify-between items-start"
+      class="fixed top-16 flex h-[calc(100vh-4rem)] w-full items-start justify-between rounded-t-4xl bg-white p-8"
       in:fly={{
         delay: 50,
         duration: 250,
@@ -57,7 +59,6 @@
         easing: cubicOut,
       }}
       out:fly={{
-        // delay: 50,
         duration: 250,
         y: "100%",
         opacity: 1,
@@ -65,7 +66,7 @@
       }}
     >
       <ul
-        class="font-medium text-3xl sm:text-4xl flex flex-col gap-4 leading-none mt-2"
+        class="mt-2 flex flex-col gap-4 text-3xl font-medium leading-none sm:text-4xl"
       >
         <a
           href="/"
@@ -75,6 +76,7 @@
         >
           <li>Home</li>
         </a>
+
         <a
           href="/events"
           onclick={() => {
@@ -83,6 +85,7 @@
         >
           <li>Events</li>
         </a>
+
         <a
           href="/volunteer"
           onclick={() => {
@@ -91,6 +94,7 @@
         >
           <li>Volunteer</li>
         </a>
+
         <a
           href="/donate"
           onclick={() => {
@@ -99,6 +103,7 @@
         >
           <li>Donate</li>
         </a>
+
         <a
           href="/contact"
           onclick={() => {
@@ -114,7 +119,8 @@
         onclick={() => {
           $showOverlay = false;
         }}
-        ><svg
+      >
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

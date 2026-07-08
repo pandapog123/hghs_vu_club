@@ -1,5 +1,5 @@
 <footer
-  class="bg-[#061231] text-white flex flex-col md:flex-row justify-between p-4 py-6 pb-10 gap-8 lg:px-32 lg:pt-12 lg:pb-16"
+  class="mt-auto w-full shrink-0 bg-[#061231] text-white flex flex-col md:flex-row justify-between p-4 py-6 pb-10 gap-8 lg:px-32 lg:pt-12 lg:pb-16"
 >
   <div class="text-3xl md:text-4xl font-semibold flex flex-col gap-3">
     <h1>Valor Unity Crew</h1>
