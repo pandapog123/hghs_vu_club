@@ -21,8 +21,9 @@
 <div bind:this={header}></div>
 
 <header
-  class="flex justify-between items-center p-6 sm:p-12 sm:py-10 sticky top-0 z-30 transition-colors duration-300 ease-in-out {changeHeaderColor
-    ? 'bg-[#d7e2ff]'
+  class="flex justify-between items-center p-8 sticky top-0 z-30 transition-all duration-300 ease-in-out {changeHeaderColor
+    // ? 'bg-[#d7e2ff]'
+    ? 'sm:p-4 bg-white'
     : 'bg-white'}"
 >
   <a href="/">
